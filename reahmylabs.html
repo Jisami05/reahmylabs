@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine?</title>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ffb3c6, #f6d6ed, #ffe1ef);
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 30px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+button {
+    padding: 15px 35px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+#openBtn { background: #ff7da0; color: white; }
+#yesBtn { background: #ff4b5c; color: white; }
+#noBtn { background: #444; color: white; }
+#backBtn { background: #ff7da0; color: white; }
+
+.button-wrapper {
+    display: flex;          
+    justify-content: center;
+    align-items: center;
+}
+
+.gif {
+    position: absolute;     
+    height: auto;
+    display: none;
+    pointer-events: none;        
+    transform: translateY(-50%); 
+}
+
+#gifYes { 
+    left: -300px;   
+    top: 90%;  
+    width: 280px; 
+}
+
+#gifNo { 
+    left: 180px;   
+    top: 130%;    
+    width: 200px;   
+}
+
+/* Faster rise for floating emojis */
+@keyframes rise {
+    0% { transform: translateY(100vh) scale(1); opacity:1; }
+    100% { transform: translateY(-50px) scale(1.2); opacity:0; }
+}
+
+.floating-emoji {
+    position: absolute;
+    font-size: 2rem;
+    animation: rise 2s linear forwards; /* Faster */
+}
+
+/* Heart floating for Yes page */
+.heart {
+    position: absolute;
+    font-size: 2rem;
+    color: pink;
+    animation: rise 2.5s linear forwards; /* Slightly faster */
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="container" id="page1">
+    <h1>💌 I have something for you...</h1>
+    <button id="openBtn">Open this 💖</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="container" id="page2" style="display:none;">
+    <h1>Can you be my Valentine? 💘</h1>
+
+    <div class="button-wrapper">
+        <!-- Yes Button with GIF on left -->
+        <div style="position: relative; display: flex; align-items: center; margin-right: 40px;">
+            <img id="gifYes"
+                 class="gif"
+                 src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3hqbThkdzFrOTh2dXRpYWJma2s4M2ZydGRsY3FmYXU3am9ia29meiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/DqY8dWBiMus24/giphy.gif"
+                 alt="Yes Reaction">
+            <button id="yesBtn">Yes 🥰</button>
+        </div>
+
+        <!-- No Button with GIF on right -->
+        <div style="position: relative; display: flex; align-items: center; margin-left: 40px;">
+            <button id="noBtn">No 😩</button>
+            <img id="gifNo"
+                 class="gif"
+                 src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRwbnk1azF2bzFteTg5em0xa3h5NWZ1Y2pmNno2ZzB2aHZjbDZ1eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/bh7tDYWM860joCp6M5/giphy.gif"
+                 alt="No Reaction">
+        </div>
+    </div>
+</div>
+
+<!-- PAGE YES -->
+<div class="container" id="pageYes" style="display:none;">
+    <h1 style="color:white;">
+        Happy Valentine's Day Penguin! 🐧💝<br>
+        Sana di ka na galet and magustuhan mo yung mga gifts mo today!<br>
+        I love you so much 🥰🥰🥰
+    </h1>
+</div>
+
+<!-- PAGE NO -->
+<div class="container" id="pageNo" style="display:none;">
+    <h1 style="color:white;">Hays ang kupal talaga kahit dito! 😩😩😩</h1>
+    <button id="backBtn">Go Back 💔</button>
+</div>
+
+<script>
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+const pageYes = document.getElementById("pageYes");
+const pageNo = document.getElementById("pageNo");
+
+const openBtn = document.getElementById("openBtn");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const backBtn = document.getElementById("backBtn");
+
+const gifYes = document.getElementById("gifYes");
+const gifNo = document.getElementById("gifNo");
+
+openBtn.onclick = () => {
+    page1.style.display = "none";
+    page2.style.display = "flex";
+};
+
+yesBtn.onclick = () => {
+    page2.style.display = "none";
+    pageYes.style.display = "flex";
+    startHearts();
+};
+
+noBtn.onclick = () => {
+    page2.style.display = "none";
+    pageNo.style.display = "flex";
+    startSadEmojis();
+};
+
+backBtn.onclick = () => {
+    pageNo.style.display = "none";
+    page2.style.display = "flex";
+};
+
+yesBtn.addEventListener("mouseenter", () => { gifYes.style.display = "block"; });
+yesBtn.addEventListener("mouseleave", () => { gifYes.style.display = "none"; });
+
+noBtn.addEventListener("mouseenter", () => { gifNo.style.display = "block"; });
+noBtn.addEventListener("mouseleave", () => { gifNo.style.display = "none"; });
+
+// ----------------- Sad Emojis -----------------
+let sadInterval;
+
+function startSadEmojis() {
+    if (sadInterval) clearInterval(sadInterval);
+
+    sadInterval = setInterval(() => {
+        const numEmojis = Math.floor(Math.random() * 3) + 3; // 3 to 5 emojis
+        for (let i = 0; i < numEmojis; i++) {
+            const emoji = document.createElement('div');
+            emoji.classList.add('floating-emoji');
+            emoji.style.left = Math.random() * window.innerWidth + 'px';
+            emoji.style.animationDuration = (1.5 + Math.random() * 1) + 's'; // faster
+            emoji.innerText = '😢';
+            pageNo.appendChild(emoji);
+            setTimeout(() => emoji.remove(), 2500); // remove after animation
+        }
+    }, 500); // more frequent for continuous effect
+}
+
+// ----------------- Hearts for Yes -----------------
+function startHearts() {
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = Math.random() * window.innerWidth + 'px';
+        heart.style.animationDuration = (2 + Math.random() * 1) + 's';
+        heart.innerText = '❤️';
+        pageYes.appendChild(heart);
+        setTimeout(() => heart.remove(), 3500);
+    }, 300); // continuous hearts
+}
+</script>
+</body>
+</html>
